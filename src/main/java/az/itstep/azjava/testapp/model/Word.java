@@ -6,18 +6,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Date;
 
 @Data
 @Entity
-public class Employee {
+public class Word {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private String name;
-    private String surname;
-    private Integer salary;
-    private String position;
-    private Date dateOfBirth;
-    private Integer departmentId;
+    private Integer id;//Postgre: SERIAL, MySql INT AUTOINCREMENT
+    private String en;
+    private String az;
 }

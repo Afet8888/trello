@@ -3,32 +3,26 @@ package az.itstep.azjava.testapp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-/**
- * @ComponentScan - base package gosterir
- * @EnableAutoConfiguration
- */
 @SpringBootApplication
 public class Application {
 
-    /*  ***DTO***
-     * Employee {
-     *     id, name, surname, salary, position
-     *     dateOfBirth, department
-     * }
-     * Department {
-     *     id, name, List<Employee>
-     * }
+    /*
+     * Luget. 2 dil. En, Az.
+     * Lugete sozler elave etmek
+     * Sozu az dilinde gonderib ingilis dilinde
+     * tercumesini almaq
+     * Sozu ingilis dilinde gonderib az dilinde
+     * tercumesini almaq
+     *
+     * Word {
+     *  id, String az, String en;
+     * } Create
+     * /az/{word} -> ingilis dilinde tercume
+     * /en/{word} -> azerbaycan dilinde tercume
      *
      *
-     * /api/department (CRUD)
-     *
-     * /api/employee (CRUD)
-     *
-     * /api/salary GET -> maashlarin cemi
-     * /api/salary/department/{id}/ GET
-     *         -> departamentde olan ishcilerin
-     *              maashlarinin cemi
      */
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class);
     }
