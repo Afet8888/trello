@@ -9,10 +9,12 @@ import javax.persistence.Id;
 
 @Data
 @Entity
-public class Word {
+public class UserRole {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;//Postgre: SERIAL, MySql INT AUTOINCREMENT
-    private String en;
-    private String az;
+    private Short id;
+
+    private String name;
+
 }

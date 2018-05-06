@@ -1,47 +1,32 @@
 package az.itstep.azjava.testapp;
 
-import az.itstep.azjava.testapp.model.User;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 
-import java.util.HashMap;
-import java.util.Map;
 
 @SpringBootApplication
 public class Application {
-
     /*
-     * Luget. 2 dil. En, Az.
-     * Lugete sozler elave etmek
-     * Sozu az dilinde gonderib ingilis dilinde
-     * tercumesini almaq
-     * Sozu ingilis dilinde gonderib az dilinde
-     * tercumesini almaq
-     *
-     * Sozleri tekce qeydiyyatdan kecmish
-     * userler elave ede biler
-     * 1. User modeli yaratmaq
-     * 2. User repository yaratmaq
-     * 3. User Service yaratmaq (token ve sair)
-     * 4. UserController yaratmaq (qeydiyyat, girish)
-     *
-     * Word {
-     *  id, String az, String en;
-     * } Create
-     * /az/{word} -> ingilis dilinde tercume
-     * /en/{word} -> azerbaycan dilinde tercume
-     *
-     *
+    User {
+        username, password, role (admin/user)
+    } qeydiyyat, girish
+    Book {
+        name, author, List<Comments>
+    } CRUD
+    Comment {
+        title, text, user
+    } CRUD
+    Admin rolu olan user qeydiyyatdan kece bilmez
+    Qeydiyatdan kecende role user olmalidi
+    Kitabi Create, Update, Delete ancaq admin rolu olan
+    user
+    Comment-i her bir tokeni olan user yaza bilir
+
      */
+
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class);
-    }
-
-    @Bean
-    Map<String, User> getAuthorizedMap() {
-        return new HashMap<>();
     }
 
 }
