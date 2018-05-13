@@ -1,12 +1,17 @@
-package az.itstep.azjava.testapp.security;
+package az.itstep.azjava.testapp.security.controller;
 
+import az.itstep.azjava.testapp.security.service.JwtUserDetailsService;
+import az.itstep.azjava.testapp.security.utils.JwtTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -16,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
 
+@Component
 @Slf4j
 public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
 
@@ -23,19 +29,16 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
 
     private JwtTokenUtil jwtTokenUtil;
 
+    @Value("${jwt.header}")
     private String tokenHeader;
 
-    public JwtAuthorizationTokenFilter(UserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil, String tokenHeader) {
-        this.userDetailsService = userDetailsService;
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.tokenHeader = tokenHeader;
-    }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         log.debug("processing authentication for '{}'", request.getRequestURL());
 
-        val requestHeader = request.getHeader(this.tokenHeader);
+        String requestHeader = request.getHeader(this.tokenHeader);
 
         String username = null;
         String authToken = null;
@@ -53,7 +56,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
         }
 
         log.debug("checking authentication for user '{}'", username);
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (Objects.nonNull(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
             log.debug("security context was null, so authorizating user");
 
             // It is not compelling necessary to load the use details from the database. You could also store the information
@@ -71,5 +74,16 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
         }
 
         chain.doFilter(request, response);
+    }
+
+
+    @Autowired
+    public void setUserDetailsService(JwtUserDetailsService jwtUserDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
+    @Autowired
+    public void setJwtTokenUtil(JwtTokenUtil jwtTokenUtil) {
+        this.jwtTokenUtil = jwtTokenUtil;
     }
 }

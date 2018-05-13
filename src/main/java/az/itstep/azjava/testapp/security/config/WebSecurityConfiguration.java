@@ -1,9 +1,10 @@
 package az.itstep.azjava.testapp.security.config;
 
-import az.itstep.azjava.testapp.security.JwtAuthenticationEntryPoint;
-import az.itstep.azjava.testapp.security.JwtAuthorizationTokenFilter;
-import az.itstep.azjava.testapp.security.JwtTokenUtil;
-import az.itstep.azjava.testapp.security.userdetails.service.JwtUserDetailsService;
+
+import az.itstep.azjava.testapp.security.controller.JwtAuthenticationEntryPoint;
+import az.itstep.azjava.testapp.security.controller.JwtAuthorizationTokenFilter;
+import az.itstep.azjava.testapp.security.service.JwtUserDetailsService;
+import az.itstep.azjava.testapp.security.utils.JwtTokenUtil;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +14,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -26,9 +26,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private JwtAuthenticationEntryPoint unauthorizedHandler;
 
-    private JwtTokenUtil jwtTokenUtil;
 
-    private JwtUserDetailsService jwtUserDetailsService;
+    private JwtAuthorizationTokenFilter jwtAuthorizationTokenFilter;
 
 
     @Value("${jwt.header}")
@@ -44,13 +43,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    public void setJwtTokenUtil(JwtTokenUtil jwtTokenUtil) {
-        this.jwtTokenUtil = jwtTokenUtil;
-    }
-
-    @Autowired
-    public void setJwtUserDetailsService(JwtUserDetailsService jwtUserDetailsService) {
-        this.jwtUserDetailsService = jwtUserDetailsService;
+    public void setJwtAuthorizationTokenFilter(JwtAuthorizationTokenFilter jwtAuthorizationTokenFilter) {
+        this.jwtAuthorizationTokenFilter = jwtAuthorizationTokenFilter;
     }
 
     @Bean
@@ -62,56 +56,25 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .cors()
-                .and()
+                .cors().and()
                 .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
                 .and()
-                .sessionManagement()
-                //if rest
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                    .antMatchers("/auth/**").permitAll()
-                    .antMatchers("/api/books").hasRole("ADMIN")
-                    .antMatchers(HttpMethod.GET,"/api/books")
-                        .hasAnyRole("ADMIN", "USER")
-
-                    .antMatchers("/api/comments")
-                        .hasAnyRole("ADMIN", "USER")
+                    .antMatchers("/signin", "/signup").permitAll()
+                    .antMatchers(HttpMethod.POST, "/chats").hasRole("ADMIN")
+                    .antMatchers(HttpMethod.GET, "/chats").hasAnyRole("ADMIN", "USER")
                     .anyRequest().authenticated();
 
-        // Custom JWT based security filter
-        val authenticationTokenFilter = new JwtAuthorizationTokenFilter(jwtUserDetailsService, jwtTokenUtil, tokenHeader);
         httpSecurity
-                .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthorizationTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
+        // disable page caching
         httpSecurity
                 .headers()
                 .frameOptions().sameOrigin()
                 .cacheControl();
-    }
-
-    @Override
-    public void configure(WebSecurity web) {
-        // AuthenticationTokenFilter will ignore the below paths
-        web
-                .ignoring()
-                .antMatchers(
-                        HttpMethod.POST,
-                        authenticationPath
-                )
-                // allow anonymous resource requests
-                .and()
-                .ignoring()
-                .antMatchers(
-                        HttpMethod.GET,
-                        "/",
-                        "/*.html",
-                        "/favicon.ico",
-                        "/**/*.html",
-                        "/**/*.css",
-                        "/**/*.js"
-                );
     }
 }

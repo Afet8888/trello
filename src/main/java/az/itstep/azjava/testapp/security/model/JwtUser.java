@@ -1,6 +1,6 @@
-package az.itstep.azjava.testapp.security.userdetails;
+package az.itstep.azjava.testapp.security.model;
 
-import az.itstep.azjava.testapp.model.User;
+import az.itstep.azjava.testapp.model.AppUser;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class JwtUser implements UserDetails {
-    User user;
+    AppUser user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -26,6 +26,7 @@ public class JwtUser implements UserDetails {
     public Integer getUserId() {
         return user.getId();
     }
+
 
     @Override
     public String getPassword() {
@@ -54,6 +55,6 @@ public class JwtUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.getActive();
     }
 }

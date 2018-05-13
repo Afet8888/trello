@@ -1,4 +1,4 @@
-package az.itstep.azjava.testapp.security.dto;
+package az.itstep.azjava.testapp.security.model.dto;
 
 
 import lombok.*;

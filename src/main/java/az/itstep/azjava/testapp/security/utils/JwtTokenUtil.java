@@ -1,6 +1,6 @@
-package az.itstep.azjava.testapp.security;
+package az.itstep.azjava.testapp.security.utils;
 
-import az.itstep.azjava.testapp.security.userdetails.JwtUser;
+import az.itstep.azjava.testapp.security.model.JwtUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
@@ -48,13 +48,9 @@ public class JwtTokenUtil {
                 .getBody();
     }
 
-    private Boolean isTokenExpired(String token) {
+    private boolean isTokenExpired(String token) {
         val expiration = getExpirationDateFromToken(token);
         return expiration.before(clock.now());
-    }
-
-    private Boolean ignoreTokenExpiration(String token) {
-        return false;
     }
 
     public String generateToken(UserDetails userDetails) {
@@ -65,7 +61,6 @@ public class JwtTokenUtil {
     private String doGenerateToken(Map<String, Object> claims, String subject) {
         val createdDate = clock.now();
         val expirationDate = calculateExpirationDate(createdDate);
-
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
@@ -75,8 +70,8 @@ public class JwtTokenUtil {
                 .compact();
     }
 
-    public Boolean canTokenBeRefreshed(String token) {
-        return (!isTokenExpired(token) || ignoreTokenExpiration(token));
+    public boolean canTokenBeRefreshed(String token) {
+        return !isTokenExpired(token);
     }
 
     public String refreshToken(String token) {
@@ -93,11 +88,10 @@ public class JwtTokenUtil {
                 .compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        val user = (JwtUser) userDetails;
+    public boolean validateToken(String token, UserDetails userDetails) {
         val username = getUsernameFromToken(token);
 
-        return Objects.equals(username, user.getUsername())
+        return Objects.equals(username, userDetails.getUsername())
                 && !isTokenExpired(token);
     }
 

@@ -1,4 +1,4 @@
-package az.itstep.azjava.testapp.security;
+package az.itstep.azjava.testapp.security.controller;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
