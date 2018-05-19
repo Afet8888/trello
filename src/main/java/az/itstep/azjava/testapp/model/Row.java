@@ -8,6 +8,7 @@ import java.util.List;
 
 @Data
 @Entity
+@Table(name = "tr_row")
 public class Row {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
