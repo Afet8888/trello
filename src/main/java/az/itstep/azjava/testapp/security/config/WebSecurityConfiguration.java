@@ -4,8 +4,10 @@ import az.itstep.azjava.testapp.security.controller.JwtUnauthorizedHandleControl
 import az.itstep.azjava.testapp.security.filters.JwtAuthorizationTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -42,6 +44,33 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .frameOptions().sameOrigin()
                 .cacheControl();
     }
+
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        // TokenAuthenticationFilter will ignore the below paths
+        web.ignoring().antMatchers(
+                HttpMethod.PUT,
+                "/api/auth"
+        );
+        web.ignoring().antMatchers(
+                HttpMethod.POST,
+                "/api/auth"
+        );
+
+        web.ignoring().antMatchers(
+                HttpMethod.GET,
+                "/",
+                "/webjars/**",
+                "/*.html",
+                "/favicon.ico",
+                "/**/*.html",
+                "/**/*.css",
+                "/**/*.js"
+        );
+
+    }
+
 
     @Autowired
     public void setJwtAuthorizationTokenFilter(JwtAuthorizationTokenFilter jwtAuthorizationTokenFilter) {

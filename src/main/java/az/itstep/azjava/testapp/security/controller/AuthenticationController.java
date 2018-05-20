@@ -29,7 +29,7 @@ public class AuthenticationController {
     }
 
     @PutMapping("/api/auth")
-    public JwtAuthenticationResponse signIn(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
+    public JwtAuthenticationResponse signIn(@RequestBody JwtAuthenticationRequest authenticationRequest) {
         return authenticationService.createAuthenticationToken(authenticationRequest);
     }
 
