@@ -15,6 +15,7 @@ public class Member {
 
     String username;
 
+    @JsonIgnore
     String password;
 
     String firstname;

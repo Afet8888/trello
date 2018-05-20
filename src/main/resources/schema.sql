@@ -1,8 +1,8 @@
-DROP TABLE IF EXISTS tr_team;
-DROP TABLE IF EXISTS tr_member;
-DROP TABLE IF EXISTS tr_board;
-DROP TABLE IF EXISTS tr_row;
 DROP TABLE IF EXISTS tr_task;
+DROP TABLE IF EXISTS tr_row;
+DROP TABLE IF EXISTS tr_board;
+DROP TABLE IF EXISTS tr_member;
+DROP TABLE IF EXISTS tr_team;
 
 CREATE TABLE tr_team (
   PRIMARY KEY (id),
@@ -47,4 +47,3 @@ CREATE TABLE tr_task (
 
   FOREIGN KEY (row_id) REFERENCES tr_row (id)
 );
-

@@ -1,6 +1,8 @@
 package az.itstep.azjava.testapp.security.service;
 
 
+import az.itstep.azjava.testapp.model.Member;
+import az.itstep.azjava.testapp.repository.MemberRepository;
 import az.itstep.azjava.testapp.security.exceptions.AuthenticationException;
 import az.itstep.azjava.testapp.security.exceptions.TokenNotFoundException;
 import az.itstep.azjava.testapp.security.exceptions.TokenRefreshException;
@@ -28,6 +30,8 @@ public class AuthenticationService {
     private JwtTokenUtil jwtTokenUtil;
 
     private UserDetailsService userDetailsService;
+
+    private MemberRepository memberRepository;
 
 
     public JwtAuthenticationResponse createAuthenticationToken(JwtAuthenticationRequest authenticationRequest) {
@@ -61,6 +65,10 @@ public class AuthenticationService {
 
         val username = jwtTokenUtil.getUsernameFromToken(token);
         return (JwtUser) userDetailsService.loadUserByUsername(username);
+    }
+
+    public Member signUp(Member member) {
+        return memberRepository.save(member);
     }
 
     /**

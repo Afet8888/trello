@@ -4,7 +4,6 @@ import az.itstep.azjava.testapp.security.controller.JwtUnauthorizedHandleControl
 import az.itstep.azjava.testapp.security.filters.JwtAuthorizationTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,12 +31,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/auth").permitAll()
-                .antMatchers(HttpMethod.PUT, "/api/locations").permitAll()
-                //Это для удобного тестирования диспетчерного приложения
-                .antMatchers(HttpMethod.GET, "/api/locations/**").permitAll()
-                .antMatchers("/api/users").hasRole("ADMIN")
-                .anyRequest().hasRole("DISPATCHER");
-
+                .anyRequest().authenticated();
 
         httpSecurity
                 .addFilterBefore(jwtAuthorizationTokenFilter, UsernamePasswordAuthenticationFilter.class);

@@ -1,5 +1,6 @@
 package az.itstep.azjava.testapp.security.controller;
 
+import az.itstep.azjava.testapp.model.Member;
 import az.itstep.azjava.testapp.security.exceptions.AuthenticationException;
 import az.itstep.azjava.testapp.security.model.JwtUser;
 import az.itstep.azjava.testapp.security.model.dto.JwtAuthenticationRequest;
@@ -22,18 +23,23 @@ public class AuthenticationController {
 
     private AuthenticationService authenticationService;
 
+    @PostMapping("/api/auth")
+    public Member signUp(@RequestBody Member member) {
+        return authenticationService.signUp(member);
+    }
+
     @PutMapping("/api/auth")
-    public JwtAuthenticationResponse createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
+    public JwtAuthenticationResponse signIn(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
         return authenticationService.createAuthenticationToken(authenticationRequest);
     }
 
     @GetMapping("/api/auth")
-    public JwtAuthenticationResponse refreshAndGetAuthenticationToken(HttpServletRequest request) {
+    public JwtAuthenticationResponse refreshToken(HttpServletRequest request) {
         val authToken = request.getHeader(tokenHeader);
         return authenticationService.refreshToken(authToken);
     }
 
-    @GetMapping("/user")
+    @GetMapping("/api/user")
     public JwtUser getAuthenticatedUser(HttpServletRequest request) {
         val authToken = request.getHeader(tokenHeader);
         return authenticationService.getUserByToken(authToken);
