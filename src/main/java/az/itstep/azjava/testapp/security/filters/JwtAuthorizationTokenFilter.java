@@ -37,7 +37,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         log.debug("processing authentication for '{}'", request.getRequestURL());
 
-        val requestHeader = request.getHeader(this.tokenHeader);
+        val requestHeader = request.getHeader(tokenHeader);
 
         String username = null;
         String authToken = null;

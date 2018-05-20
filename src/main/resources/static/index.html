@@ -8,13 +8,50 @@
 
 <script>
 
+    var token;
+
+    function signIn() {
+        var usr = $("#username").val();
+        var pass = $("#password").val();
+
+        $.ajax({
+            url: "/api/auth",
+            method: "PUT",
+            data: {
+                username: usr,
+                password: pass
+            },
+            success: function (res) {
+                token = res.token;
+            }
+        })
+
+    }
+
+
+    function anyRequest() {
+        $.ajax({
+            url: "/api/border",
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token
+            },
+            data: {
+                name: "ITStep",
+
+            }
+        })
+    }
 
 </script>
 <body>
 
-<!--<button onclick="signIn()">-->
-<!--SIGN IN-->
-<!--</button>-->
+<input type="text" id="username">
+<input type="password" id="password">
+
+<button onclick="signIn()">
+    SIGN IN
+</button>
 
 <h1>HELLO</h1>
 
