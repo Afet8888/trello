@@ -19,7 +19,9 @@ public class JwtUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return memberRepository.findByUsername(username)
                 .map(u ->
-                        new JwtUser(u, null))
+                        //Rollar elave etmek istesez, null yerine rollar
+                        //listini konstruktora oturmek lazimdi
+                        new JwtUser(u, null /*List.of(new SimpleGrantedAuthority("ROLE_ADMIN"))*/))
                 .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
